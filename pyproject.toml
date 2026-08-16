@@ -1,0 +1,24 @@
+[project]
+name = "learn-asr"
+version = "0.1.0"
+description = "A hands-on Chinese ASR course from audio fundamentals to streaming CTC, WFST, semantics, quantization, and deployment"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.141.1",
+    "httpx>=0.28.1",
+    "ipykernel>=7.3.0",
+    "ipywidgets>=8.1.8",
+    "jupyter>=1.1.1",
+    "librosa>=1.0.0",
+    "matplotlib>=3.11.1",
+    "numpy>=2.5.2",
+    "onnx>=1.22.0",
+    "onnxruntime>=1.28.0",
+    "onnxscript>=0.7.1",
+    "soundfile>=0.14.0",
+    "torch>=2.13.0",
+    "torchao>=0.18.0",
+    "uvicorn[standard]>=0.52.3",
+    "websockets>=17.0.1",
+]

@@ -1,0 +1,4 @@
+*.ipynb linguist-language=Jupyter Notebook
+*.wav binary
+*.onnx binary
+uv.lock linguist-generated=true

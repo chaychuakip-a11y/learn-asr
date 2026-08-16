@@ -1,0 +1,6 @@
+.venv
+notebooks
+data
+outputs
+__pycache__
+*.pyc
