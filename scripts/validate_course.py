@@ -11,7 +11,7 @@ import nbformat
 ROOT=Path(__file__).resolve().parents[1]
 NB_DIR=ROOT/"notebooks"
 EXPECTED=set(range(1,42))
-REQUIRED=["README.md","pyproject.toml","uv.lock","DATA_SOURCES.md","COURSE_AUDIT.md","LICENSE","LICENSE-CONTENT","LICENSE-SCOPE.md","NOTICE","notebooks/课程索引_第01到41课.md"]
+REQUIRED=["README.md","pyproject.toml","uv.lock","DATA_SOURCES.md","COURSE_AUDIT.md","LICENSE","LICENSE-CONTENT","LICENSE-SCOPE.md","NOTICE","notebooks/课程索引_第01到41课.md","notebooks/学习中枢_诊断与掌握度仪表盘.ipynb"]
 
 
 def lesson_number(path:Path):
@@ -46,6 +46,8 @@ def main():
     errors=[]
     for rel in REQUIRED:
         if not (ROOT/rel).exists():errors.append(f"missing required file: {rel}")
+    hub=NB_DIR/"学习中枢_诊断与掌握度仪表盘.ipynb"
+    if hub.exists():errors.extend(validate_notebook(hub,False))
     sources=sorted(p for p in NB_DIR.glob("[0-9][0-9]_*.ipynb") if not p.stem.endswith("_已运行"))
     numbers=[lesson_number(p) for p in sources]
     if set(numbers)!=EXPECTED:
