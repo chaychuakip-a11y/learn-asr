@@ -39,6 +39,11 @@ Free Spoken Digit Dataset recordings and course-generated adaptations of those
 recordings remain subject to the upstream CC BY-SA 4.0 license. They are not
 relicensed under Apache-2.0 or CC BY 4.0. See `DATA_SOURCES.md`.
 
+AudioMNIST recordings, metadata, and derived inventory artifacts remain subject
+to the upstream MIT license and attribution/copyright notice. They are used for
+the preregistered external-evaluation lesson and are not relicensed by this
+project. See `DATA_SOURCES.md`.
+
 Third-party Python dependencies retain their own licenses. The project licenses
 do not override those terms.
 

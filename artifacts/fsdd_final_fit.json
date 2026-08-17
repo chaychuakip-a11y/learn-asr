@@ -1,0 +1,141 @@
+{
+  "format_version": 1,
+  "protocol_id": "audiomnist-external-digit-transfer-v1",
+  "protocol_sha256": "43a212026a29561f8633ec135281951ec4ad4a919ddea3370904d6a78a7c40f3",
+  "preregistration_commit": "0b303605ea02aa486ba4de36469d0ac42cef9966",
+  "audio_mnist_accessed_by_final_fit": false,
+  "training_dataset": "Free Spoken Digit Dataset",
+  "training_revision": "26eb9aaf76e81b692f806f9140c2d2777410d7a1",
+  "training_recordings": 3000,
+  "training_speakers": [
+    "george",
+    "jackson",
+    "lucas",
+    "nicolas",
+    "theo",
+    "yweweler"
+  ],
+  "training_sequences": 3000,
+  "training_feature_examples": 6000,
+  "config": {
+    "seed": 20260818,
+    "epochs": 10,
+    "batch_size": 64,
+    "learning_rate": 0.002,
+    "hidden_dim": 48,
+    "num_layers": 5,
+    "kernel_size": 5,
+    "augmentation_copies": 1,
+    "patience": 1,
+    "train_sequences": 3000,
+    "dev_sequences": 0,
+    "test_sequences": 0,
+    "min_digits": 1,
+    "max_digits": 4
+  },
+  "model_config": {
+    "feature_dim": 24,
+    "hidden_dim": 48,
+    "num_layers": 5,
+    "kernel_size": 5,
+    "num_classes": 11
+  },
+  "parameter_count": 60155,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 5.270144531067381
+    },
+    {
+      "epoch": 2,
+      "train_loss": 2.2127646398037037
+    },
+    {
+      "epoch": 3,
+      "train_loss": 1.1392150102777685
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.4815030261240107
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.27641065117526564
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.2078662618519144
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.16922158660723807
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.12572990060645214
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.11172121422404939
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.09837280429820432
+    }
+  ],
+  "checkpoint": "fsdd_final_external_frozen.pt",
+  "checkpoint_sha256": "5c74192bfa1b3bbddbf614a08a60b592082e7af0981af8facd3370e84d80e337",
+  "feature_mean": [
+    -3.816887617111206,
+    -2.886528730392456,
+    -2.7835144996643066,
+    -2.6794707775115967,
+    -2.6583898067474365,
+    -2.6483535766601562,
+    -2.9786486625671387,
+    -3.7225890159606934,
+    -4.163196086883545,
+    -4.523530960083008,
+    -4.802170276641846,
+    -5.0241217613220215,
+    -5.093247890472412,
+    -5.035537242889404,
+    -4.852199554443359,
+    -4.747554302215576,
+    -4.764945983886719,
+    -4.759457588195801,
+    -4.775151252746582,
+    -4.680271148681641,
+    -4.757364273071289,
+    -4.897600173950195,
+    -4.784592628479004,
+    -5.005548477172852
+  ],
+  "feature_std": [
+    3.7721924781799316,
+    3.9868922233581543,
+    4.091536998748779,
+    4.225888252258301,
+    4.424489498138428,
+    4.485066890716553,
+    4.414508819580078,
+    4.219017028808594,
+    4.047811508178711,
+    3.87848162651062,
+    3.730201482772827,
+    3.665590524673462,
+    3.691598892211914,
+    3.740200996398926,
+    3.763350248336792,
+    3.782709836959839,
+    3.7961058616638184,
+    3.7083795070648193,
+    3.586649179458618,
+    3.6028499603271484,
+    3.6576952934265137,
+    3.708892583847046,
+    3.7534611225128174,
+    3.7351138591766357
+  ],
+  "checkpoint_selection": "fixed final epoch 10; no dev or external metric read"
+}

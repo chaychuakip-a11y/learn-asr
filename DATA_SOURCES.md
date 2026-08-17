@@ -30,3 +30,15 @@
 - `scripts/build_*`：生成课程 Notebook；不下载或使用私有数据。
 
 不要向仓库提交包含个人录音、API 密钥、访问 token 或未经授权数据的文件。
+
+## AudioMNIST
+
+- 官方仓库：https://github.com/soerenab/AudioMNIST
+- 本实验固定版本：`630d7dab4c040882834de6fa21baf9a60372accd`
+- 固定 ZIP SHA256：`f0420069d684baff1688658d1ba53316f9b3f742a7d0ab2963a064c591f9c573`
+- 数据说明：60 位说话人的 30,000 条英语数字 0～9 录音，48 kHz mono PCM_16
+- 上游许可：MIT
+- `.local_data/audiomnist-630d7dab/`：完整本地缓存，不提交 Git
+- `artifacts/audiomnist_external_manifest.json`：文件、音频头与 speaker metadata 审计清单
+
+AudioMNIST 只用于预注册后的外部评测。首次评分后它即属于“已接触数据”，不得在其结果上调参后仍把同一批数据称作 untouched test。
