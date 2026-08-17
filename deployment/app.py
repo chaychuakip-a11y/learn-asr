@@ -3,7 +3,7 @@ from pathlib import Path
 
 import numpy as np
 import onnxruntime as ort
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
 from deployment.model import CACHE_FRAMES, CHUNK_FRAMES, FEATURE_DIM
@@ -45,7 +45,10 @@ def health():
 
 @app.post("/infer")
 def infer(request: InferRequest):
-    logits, new_cache = run_chunk(request.frames, request.cache)
+    try:
+        logits, new_cache = run_chunk(request.frames, request.cache)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
     return {"logits": logits.tolist(), "cache": new_cache.tolist()}
 
 
