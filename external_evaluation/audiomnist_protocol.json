@@ -1,0 +1,168 @@
+{
+  "format_version": 1,
+  "protocol_id": "audiomnist-external-digit-transfer-v1",
+  "frozen_at": "2026-08-18T00:00:00+08:00",
+  "status": "frozen_before_audio_download_or_scoring",
+  "research_question": "How well does the finalized FSDD causal CTC training procedure transfer to entirely new AudioMNIST speakers and recording conditions without AudioMNIST-driven tuning?",
+  "source": {
+    "dataset": "AudioMNIST",
+    "official_repository": "https://github.com/soerenab/AudioMNIST",
+    "revision": "630d7dab4c040882834de6fa21baf9a60372accd",
+    "license": "MIT",
+    "expected_speakers": 60,
+    "expected_digits": 10,
+    "expected_repetitions_per_digit_per_speaker": 50,
+    "expected_recordings": 30000,
+    "expected_sample_rate": 48000,
+    "expected_channels": 1,
+    "expected_encoding": "16-bit PCM WAV",
+    "expected_audio_blob_bytes_from_github_tree": 1851988532
+  },
+  "prior_contact": {
+    "audiomnist_audio_downloaded": false,
+    "audiomnist_audio_listened_to": false,
+    "audiomnist_labels_scored": false,
+    "allowed_before_freeze": [
+      "official README",
+      "official LICENSE",
+      "official paper dataset description",
+      "GitHub commit/tree metadata without audio contents"
+    ]
+  },
+  "input_training_data": {
+    "dataset": "Free Spoken Digit Dataset",
+    "revision": "26eb9aaf76e81b692f806f9140c2d2777410d7a1",
+    "recordings": 3000,
+    "speakers": [
+      "george",
+      "jackson",
+      "lucas",
+      "nicolas",
+      "theo",
+      "yweweler"
+    ]
+  },
+  "final_fit": {
+    "rule": "Train one new model on all six FSDD speakers; no AudioMNIST audio, labels, metrics, or metadata enter fitting or model selection.",
+    "seed": 20260818,
+    "epochs": 10,
+    "epoch_derivation": {
+      "source": "selected gain_noise best epochs in the already-published six-fold FSDD LOSO experiment",
+      "fold_best_epochs": [7, 11, 11, 8, 11, 7],
+      "median": 9.5,
+      "rounding": "round-half-up",
+      "result": 10
+    },
+    "train_sequences": 3000,
+    "min_digits": 1,
+    "max_digits": 4,
+    "silence_samples_at_8khz": [320, 800],
+    "augmentation": {
+      "copies": 1,
+      "gain_db_uniform": [-8.0, 8.0],
+      "white_noise_snr_db_uniform": [5.0, 25.0]
+    },
+    "feature_statistics": "computed from FSDD final-fit examples only",
+    "frontend": {
+      "sample_rate": 8000,
+      "n_fft": 256,
+      "win_length": 200,
+      "hop_length": 80,
+      "n_mels": 24,
+      "peak_normalize": false
+    },
+    "model": {
+      "type": "causal_conv_ctc",
+      "hidden_dim": 48,
+      "num_layers": 5,
+      "kernel_size": 5,
+      "num_classes_including_blank": 11
+    },
+    "optimizer": {
+      "type": "AdamW",
+      "learning_rate": 0.002,
+      "weight_decay": 0.0001,
+      "batch_size": 64,
+      "gradient_clip_norm": 5.0
+    },
+    "checkpoint_selection": "last epoch because epoch count was frozen from prior LOSO before AudioMNIST contact"
+  },
+  "external_preprocessing": {
+    "decode": "read mono WAV as float32",
+    "resample": {
+      "from_hz": 48000,
+      "to_hz": 8000,
+      "method": "librosa.resample_soxr_hq"
+    },
+    "amplitude": "no per-utterance peak normalization",
+    "trimming": "none",
+    "failure_policy": "report and stop on any file-count, filename, speaker, digit, sample-rate, channel, encoding, NaN, or empty-audio contract violation"
+  },
+  "evaluation_tracks": {
+    "single_digit": {
+      "recordings": 30000,
+      "rule": "score every official WAV exactly once"
+    },
+    "multi_digit": {
+      "sequences_per_speaker": 100,
+      "total_sequences": 6000,
+      "seed": 20260819,
+      "min_digits": 1,
+      "max_digits": 4,
+      "adjacent_repeat_every_n_sequences": 10,
+      "silence_samples_at_8khz": [320, 800],
+      "rule": "concatenate clips only within the same AudioMNIST speaker"
+    }
+  },
+  "decoder": {
+    "primary": "CTC greedy collapse",
+    "language_model": "none",
+    "beam_search": "not used for primary external score"
+  },
+  "primary_metrics": [
+    "single-digit exact rate",
+    "single-digit CER",
+    "multi-digit sequence exact rate",
+    "multi-digit CER",
+    "speaker-macro mean",
+    "speaker sample standard deviation",
+    "speaker-level t interval"
+  ],
+  "required_breakdowns": [
+    "all 60 individual speakers",
+    "reference sequence length 1 through 4",
+    "substitution/deletion/insertion counts",
+    "accent, gender, native-speaker, age-band metadata as descriptive slices only"
+  ],
+  "streaming_checks": {
+    "representatives": "speaker IDs 01 through 60, digit 7, repetition 0",
+    "chunk_samples_at_8khz": [1, 137, 400, 800, 1600],
+    "invariant": "every chunk size must produce the same final greedy text for a given waveform",
+    "interpretation": "chunk invariance checks implementation consistency, not recognition correctness"
+  },
+  "performance_checks": {
+    "threads": 1,
+    "device": "CPU",
+    "warmups": 5,
+    "measured_runs": 30,
+    "chunk_samples_at_8khz": [400, 800, 1600],
+    "reported": [
+      "latency p50",
+      "latency p95",
+      "mean real-time factor"
+    ],
+    "scope": "preloaded and already-resampled waveform; excludes disk I/O and resampling"
+  },
+  "interpretation_bands": {
+    "single_digit_exact_at_least_0_70": "adequate transfer for this toy digit task; still not production ASR",
+    "single_digit_exact_0_40_to_0_70": "weak transfer requiring a separately designed adaptation experiment",
+    "single_digit_exact_below_0_40": "external generalization failure",
+    "note": "bands are descriptive labels fixed before scoring, not acceptance criteria used to hide or rerun results"
+  },
+  "stopping_and_disclosure": {
+    "score_once": true,
+    "publish_regardless_of_quality": true,
+    "no_audiomnist_driven_model_change_can_retain_untouched_label": true,
+    "after_scoring": "AudioMNIST becomes a contacted evaluation dataset. Any adaptation must use a predeclared AudioMNIST train/dev split and a different untouched external test source for final confirmation."
+  }
+}
