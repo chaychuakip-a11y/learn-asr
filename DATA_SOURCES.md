@@ -3,6 +3,8 @@
 ## Free Spoken Digit Dataset (FSDD)
 
 - 上游仓库：https://github.com/Jakobovski/free-spoken-digit-dataset
+- 本实验固定版本：`26eb9aaf76e81b692f806f9140c2d2777410d7a1`
+- 固定 ZIP SHA256：`beaca4fb849cad13103b2cffba913b3d7fdb5f15222da4ddd07187b3c38a757a`
 - 数据说明：英语数字 0～9 的 8 kHz WAV 录音
 - 上游许可：Creative Commons Attribution-ShareAlike 4.0 International
 - 文件命名：`{digit}_{speaker}_{index}.wav`
@@ -14,13 +16,16 @@
 - `data/spoken_digits_0_to_9_8k.wav`
 - `data/spoken_digits_0_to_9_16k.wav`
 - 根目录兼容副本 `spoken_digits_0_to_9_16k.wav`
+- `.local_data/fsdd-26eb9aaf/recordings/`：本地完整 3,000 条录音缓存，不提交 Git
+- `artifacts/fsdd_speaker_disjoint_*`：由固定版本训练得到的 manifest、指标和 CTC checkpoint
 
 拼接、重采样、加噪、回声和多麦克风信号属于课程生成的教学派生数据。公开分发这些数据时应保留本文件、上游署名和 CC BY-SA 4.0 要求。
 
 ## 生成方式
 
 - `make_practice_audio.py`：拼接数字录音并生成练习音频；
+- `python -m fsdd_generalization.data`：下载固定版本、校验 SHA256，并验证 3,000 条音频契约；
 - 各 Notebook：在内存中生成噪声、回声、增益和多通道模拟；
-- `scripts/build_*`：生成课程 Notebook，不下载私有数据。
+- `scripts/build_*`：生成课程 Notebook；不下载或使用私有数据。
 
 不要向仓库提交包含个人录音、API 密钥、访问 token 或未经授权数据的文件。
