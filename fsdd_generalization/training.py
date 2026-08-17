@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 import copy
+from functools import lru_cache
 from pathlib import Path
 import random
 from typing import Iterable
@@ -76,6 +77,15 @@ class PreparedFeatures:
 
 
 @dataclass(frozen=True)
+class PreparedTestFeatures:
+    """Outer-test features constructed only after candidate selection."""
+
+    specs: tuple[SequenceSpec, ...]
+    raw: tuple[FeatureExample, ...]
+    single_raw: tuple[FeatureExample, ...]
+
+
+@dataclass(frozen=True)
 class Evaluation:
     exact: int
     total: int
@@ -101,11 +111,17 @@ def frontend_config() -> LogMelConfig:
     )
 
 
-def load_waveform(recording: Recording) -> torch.Tensor:
-    audio, sample_rate = sf.read(recording.path, dtype="float32")
+@lru_cache(maxsize=4_096)
+def _load_waveform_cached(path: str) -> torch.Tensor:
+    audio, sample_rate = sf.read(path, dtype="float32")
     if sample_rate != 8_000 or audio.ndim != 1:
-        raise ValueError(f"unexpected audio contract: {recording.path}")
+        raise ValueError(f"unexpected audio contract: {path}")
     return torch.from_numpy(audio)
+
+
+def load_waveform(recording: Recording) -> torch.Tensor:
+    # Callers never mutate this tensor; caching avoids thousands of repeated WAV reads in LOSO.
+    return _load_waveform_cached(str(recording.path.resolve()))
 
 
 def augment_waveform(waveform: torch.Tensor, seed: int) -> torch.Tensor:
@@ -242,9 +258,13 @@ def prepare_experiment_features(
         dev_recordings, config.dev_sequences, config.min_digits, config.max_digits,
         config.seed + 202, "dev",
     )
-    test_specs = build_sequence_specs(
-        test_recordings, config.test_sequences, config.min_digits, config.max_digits,
-        config.seed + 303, "test",
+    test_specs = (
+        build_sequence_specs(
+            test_recordings, config.test_sequences, config.min_digits, config.max_digits,
+            config.seed + 303, "test",
+        )
+        if test_recordings
+        else []
     )
     return PreparedFeatures(
         frontend=frontend,
@@ -259,6 +279,37 @@ def prepare_experiment_features(
         test_specs=tuple(test_specs),
         test_raw=tuple(build_feature_examples(test_specs, frontend, 0, config.seed)),
         test_single_raw=tuple(
+            build_feature_examples(
+                single_recording_specs(test_recordings, "test-single"),
+                frontend,
+                0,
+                config.seed,
+            )
+        ) if test_recordings else (),
+    )
+
+
+def prepare_test_features(
+    test_recordings: list[Recording],
+    config: ExperimentConfig,
+    frontend: LogMelFrontend | None = None,
+) -> PreparedTestFeatures:
+    """Create outer-test labels/features after the dev-only decision is frozen."""
+    if not test_recordings:
+        raise ValueError("test recordings cannot be empty")
+    frontend = frontend or LogMelFrontend(frontend_config())
+    specs = build_sequence_specs(
+        test_recordings,
+        config.test_sequences,
+        config.min_digits,
+        config.max_digits,
+        config.seed + 303,
+        "test",
+    )
+    return PreparedTestFeatures(
+        specs=tuple(specs),
+        raw=tuple(build_feature_examples(specs, frontend, 0, config.seed)),
+        single_raw=tuple(
             build_feature_examples(
                 single_recording_specs(test_recordings, "test-single"),
                 frontend,
@@ -420,6 +471,7 @@ def run_training(
     config: ExperimentConfig,
     output_checkpoint: Path | None = None,
     prepared: PreparedFeatures | None = None,
+    evaluate_test: bool = True,
 ) -> dict[str, object]:
     torch.manual_seed(config.seed)
     np.random.seed(config.seed)
@@ -434,6 +486,8 @@ def run_training(
         train_recordings, dev_recordings, test_recordings
     ):
         raise ValueError("prepared features do not match the recording splits")
+    if evaluate_test and (not prepared.test_raw or not prepared.test_single_raw):
+        raise ValueError("evaluate_test=True requires prepared test features")
     frontend = prepared.frontend
     train_specs = prepared.train_specs
     dev_specs = prepared.dev_specs
@@ -513,13 +567,11 @@ def run_training(
         raise AssertionError("training produced no checkpoint")
     model.load_state_dict(best_state)
     final_dev = evaluate_model(model, dev_raw, mean, std)
-    # Test labels are touched only after dev model selection is complete.
-    final_test = evaluate_model(model, test_raw, mean, std)
-    final_test_single = evaluate_model(model, test_single_raw, mean, std)
+    # The best checkpoint is frozen by dev before any optional test evaluation.
     engine = StreamingAcousticEngine(frontend.config, model, DIGIT_TOKENS, mean, std)
     if output_checkpoint is not None:
         engine.save(output_checkpoint)
-    return {
+    result: dict[str, object] = {
         "config": asdict(config),
         "model_config": model_config.to_dict(),
         "parameter_count": sum(parameter.numel() for parameter in model.parameters()),
@@ -531,9 +583,40 @@ def run_training(
         "best_epoch": best_epoch,
         "history": history,
         "dev": final_dev.to_dict(),
-        "test": final_test.to_dict(),
-        "test_single_digit": final_test_single.to_dict(),
+        "test_evaluated": evaluate_test,
         "feature_mean": mean.tolist(),
         "feature_std": std.tolist(),
         "checkpoint": output_checkpoint.name if output_checkpoint is not None else None,
+    }
+    if evaluate_test:
+        # Test labels are touched only after dev model selection is complete.
+        result["test"] = evaluate_model(model, test_raw, mean, std).to_dict()
+        result["test_single_digit"] = evaluate_model(
+            model, test_single_raw, mean, std
+        ).to_dict()
+    return result
+
+
+def evaluate_checkpoint_on_test(
+    checkpoint: Path,
+    prepared_test: PreparedTestFeatures,
+) -> dict[str, object]:
+    """Evaluate one already-selected checkpoint on an outer test fold."""
+    engine = StreamingAcousticEngine.load(checkpoint)
+    sequence = evaluate_model(
+        engine.model,
+        list(prepared_test.raw),
+        engine.feature_mean,
+        engine.feature_std,
+    )
+    single = evaluate_model(
+        engine.model,
+        list(prepared_test.single_raw),
+        engine.feature_mean,
+        engine.feature_std,
+    )
+    return {
+        "test_sequences": len(prepared_test.specs),
+        "sequence": sequence.to_dict(),
+        "single_digit": single.to_dict(),
     }

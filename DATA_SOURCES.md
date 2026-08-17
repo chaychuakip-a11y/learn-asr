@@ -18,6 +18,7 @@
 - 根目录兼容副本 `spoken_digits_0_to_9_16k.wav`
 - `.local_data/fsdd-26eb9aaf/recordings/`：本地完整 3,000 条录音缓存，不提交 Git
 - `artifacts/fsdd_speaker_disjoint_*`：由固定版本训练得到的 manifest、指标和 CTC checkpoint
+- `artifacts/fsdd_loso_results.json` 与 `artifacts/fsdd_loso_checkpoints/`：六折说话人重采样指标和各折选中 checkpoint
 
 拼接、重采样、加噪、回声和多麦克风信号属于课程生成的教学派生数据。公开分发这些数据时应保留本文件、上游署名和 CC BY-SA 4.0 要求。
 

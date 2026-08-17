@@ -5,6 +5,7 @@ import unittest
 from pathlib import Path
 import json
 
+import soundfile as sf
 import torch
 
 from acoustic_engine.streaming import StreamingAcousticEngine
@@ -18,7 +19,19 @@ from fsdd_generalization.data import (
     parse_recording,
     split_recordings,
 )
-from fsdd_generalization.training import augment_waveform, build_sequence_specs, edit_distance
+from fsdd_generalization.loso import (
+    aggregate_outer_folds,
+    build_loso_folds,
+    select_candidate,
+)
+from fsdd_generalization.training import (
+    ExperimentConfig,
+    augment_waveform,
+    build_sequence_specs,
+    edit_distance,
+    prepare_experiment_features,
+    run_training,
+)
 
 
 class SplitTests(unittest.TestCase):
@@ -88,6 +101,93 @@ class TrainingUtilityTests(unittest.TestCase):
         self.assertTrue(all(2 <= len(spec.text) <= 4 for spec in specs))
         self.assertTrue(any(spec.text[0] == spec.text[1] for spec in specs))
 
+    def test_candidate_training_can_be_physically_isolated_from_test(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            splits: dict[str, list[Recording]] = {"train": [], "dev": []}
+            for split, speaker in (("train", "george"), ("dev", "jackson")):
+                for digit in "0123456789":
+                    path = root / f"{digit}_{speaker}_0.wav"
+                    waveform = torch.sin(
+                        2 * torch.pi * (180 + int(digit) * 20) * torch.arange(800) / 8_000
+                    ).mul(0.1).numpy()
+                    sf.write(path, waveform, 8_000)
+                    splits[split].append(Recording(path, digit, speaker, 0))
+            config = ExperimentConfig(
+                epochs=1,
+                batch_size=2,
+                hidden_dim=4,
+                num_layers=1,
+                train_sequences=4,
+                dev_sequences=2,
+                test_sequences=2,
+            )
+            prepared = prepare_experiment_features(
+                splits["train"], splits["dev"], [], config
+            )
+            self.assertEqual(prepared.test_specs, ())
+            result = run_training(
+                splits["train"],
+                splits["dev"],
+                [],
+                config,
+                prepared=prepared,
+                evaluate_test=False,
+            )
+            self.assertFalse(result["test_evaluated"])
+            self.assertNotIn("test", result)
+
+
+class LosoProtocolTests(unittest.TestCase):
+    def test_folds_are_disjoint_and_rotate_every_speaker(self) -> None:
+        folds = build_loso_folds()
+        self.assertEqual(len(folds), 6)
+        self.assertEqual({fold.test_speaker for fold in folds}, set(EXPECTED_SPEAKERS))
+        self.assertEqual({fold.dev_speaker for fold in folds}, set(EXPECTED_SPEAKERS))
+        for fold in folds:
+            groups = [set(fold.train_speakers), {fold.dev_speaker}, {fold.test_speaker}]
+            self.assertFalse(groups[0] & groups[1])
+            self.assertFalse(groups[0] & groups[2])
+            self.assertFalse(groups[1] & groups[2])
+            self.assertEqual(set.union(*groups), set(EXPECTED_SPEAKERS))
+
+    def test_selection_uses_dev_metrics_and_prefers_simplicity_on_tie(self) -> None:
+        tied = {
+            "clean": {"dev": {"cer": 0.4, "exact_rate": 0.5}},
+            "gain_noise": {"dev": {"cer": 0.4, "exact_rate": 0.5}},
+        }
+        self.assertEqual(select_candidate(tied), "clean")
+        improved = {
+            **tied,
+            "gain_noise": {"dev": {"cer": 0.39, "exact_rate": 0.4}},
+        }
+        self.assertEqual(select_candidate(improved), "gain_noise")
+
+    def test_aggregate_distinguishes_micro_and_speaker_macro(self) -> None:
+        folds = []
+        for index, speaker in enumerate(EXPECTED_SPEAKERS):
+            sequence = {
+                "errors": index + 1,
+                "reference_characters": 100 + index * 10,
+                "exact": 10,
+                "total": 20,
+                "cer": (index + 1) / (100 + index * 10),
+                "exact_rate": 0.5,
+            }
+            folds.append(
+                {
+                    "test_speaker": speaker,
+                    "selected_candidate": "clean" if index < 3 else "gain_noise",
+                    "outer_test": {"sequence": sequence, "single_digit": sequence},
+                }
+            )
+        aggregate = aggregate_outer_folds(folds)
+        self.assertEqual(aggregate["sequence"]["total_errors"], 21)
+        self.assertEqual(aggregate["selected_candidate_counts"], {"clean": 3, "gain_noise": 3})
+        self.assertEqual(
+            aggregate["sequence"]["macro_speaker_cer"]["speaker_count"], 6
+        )
+
 
 class PublishedArtifactTests(unittest.TestCase):
     ROOT = Path(__file__).resolve().parents[1]
@@ -131,6 +231,60 @@ class PublishedArtifactTests(unittest.TestCase):
         }
         self.assertEqual(len(predictions), 1)
         self.assertTrue(next(iter(predictions)))
+
+
+class PublishedLosoArtifactTests(unittest.TestCase):
+    ROOT = Path(__file__).resolve().parents[1]
+
+    def test_loso_results_recompute_selection_and_speaker_aggregate(self) -> None:
+        results = json.loads(
+            (self.ROOT / "artifacts" / "fsdd_loso_results.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(
+            results["interpretation"],
+            "exploratory_resampling_estimate_not_a_new_untouched_benchmark",
+        )
+        folds = results["folds"]
+        self.assertEqual(len(folds), 6)
+        self.assertEqual({row["test_speaker"] for row in folds}, set(EXPECTED_SPEAKERS))
+        for row in folds:
+            self.assertEqual(
+                row["selected_candidate"], select_candidate(row["candidate_results"])
+            )
+            self.assertTrue(row["outer_test_constructed_after_selection"])
+            for candidate in row["candidate_results"].values():
+                self.assertFalse(candidate["test_evaluated"])
+                self.assertNotIn("test", candidate)
+                self.assertEqual(candidate["test_sequences"], 0)
+        recomputed = aggregate_outer_folds(folds)
+        self.assertEqual(
+            recomputed["selected_candidate_counts"],
+            results["aggregate"]["selected_candidate_counts"],
+        )
+        self.assertAlmostEqual(
+            recomputed["sequence"]["micro_cer"],
+            results["aggregate"]["sequence"]["micro_cer"],
+        )
+        self.assertAlmostEqual(
+            recomputed["sequence"]["macro_speaker_cer"]["sample_std"],
+            results["aggregate"]["sequence"]["macro_speaker_cer"]["sample_std"],
+        )
+
+    def test_all_selected_loso_checkpoints_load(self) -> None:
+        results = json.loads(
+            (self.ROOT / "artifacts" / "fsdd_loso_results.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        checkpoint_dir = self.ROOT / "artifacts" / "fsdd_loso_checkpoints"
+        names = {row["selected_checkpoint"] for row in results["folds"]}
+        self.assertEqual(len(names), 6)
+        for name in names:
+            engine = StreamingAcousticEngine.load(checkpoint_dir / name)
+            self.assertEqual(engine.frontend_config.sample_rate, 8_000)
+            self.assertEqual(engine.tokens, tuple("0123456789"))
 
 
 if __name__ == "__main__":
