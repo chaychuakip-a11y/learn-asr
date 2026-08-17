@@ -32,6 +32,8 @@ uv run jupyter lab
 | 音频前端 | 31～36 | PCM、NS、AGC、VAD、AEC、Beamforming |
 | 后处理语义 | 37～41 | 时间戳、Diarization、ITN、置信度、NLU、LLM |
 
+CTC 是课程主轴。完成第 10～13 课后，使用 [CTC 可视化实验室](notebooks/专题_CTC可视化实验室_从路径到流式解码.ipynb) 在同一概率矩阵上贯通路径穷举、前向动态规划、`CTCLoss`、Prefix Beam 和跨 chunk 状态。
+
 ## 更高效的学习方式
 
 每课按以下顺序完成：
