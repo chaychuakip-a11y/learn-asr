@@ -15,6 +15,7 @@
 |---|---|
 | [`asr_core/`](asr_core/) | ASR 主线第 01～46 课 |
 | [`pytorch_foundations/`](pytorch_foundations/) | Python/PyTorch 桥梁课与代码伴读 |
+| [`audio_foundations/`](audio_foundations/) | 音频零基础 01～06 的完整运行对照 |
 | [`language_models/`](language_models/) | 语言模型专修第 01～09 课 |
 | [`labs/`](labs/) | 学习中枢与专题实验室 |
 | [`capstone/`](capstone/) | 实时数字 CTC 结课项目 |

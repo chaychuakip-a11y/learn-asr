@@ -52,6 +52,26 @@ class LearningPathTests(unittest.TestCase):
         self.assertIn("[唯一学习路径](LEARNING_PATH.md)", root_readme)
         self.assertIn("[`LEARNING_PATH.md`](../LEARNING_PATH.md)", notebook_readme)
 
+    def test_audio_foundation_bridge_precedes_main_audio_lessons(self) -> None:
+        bridge = "音频零基础 6 节桥梁课"
+        main = "再学习主线 01～06"
+        self.assertIn(bridge, self.text)
+        self.assertIn(main, self.text)
+        self.assertLess(self.text.index(bridge), self.text.index(main))
+        for concept in (
+            "振动",
+            "周期",
+            "RMS",
+            "dB",
+            "PCM",
+            "位深",
+            "通道",
+            "谐波",
+            "SNR",
+            "WAV",
+        ):
+            self.assertIn(concept, self.text)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -2,3 +2,6 @@
 *.wav binary
 *.onnx binary
 uv.lock linguist-generated=true
+# This byte-for-byte frozen protocol is hashed by published evaluation evidence.
+# Disable platform line-ending conversion so its SHA-256 is stable on Windows.
+external_evaluation/audiomnist_protocol.json -text

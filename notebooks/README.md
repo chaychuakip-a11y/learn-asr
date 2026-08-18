@@ -11,6 +11,7 @@
 
 第一次学习时不要进入 `_executed/` 顺序阅读。请从
 [Python/PyTorch 零基础路线](PyTorch零基础课程索引.md)、
+[音频零基础桥梁路线](音频零基础课程索引.md)、
 [第 01～41 课核心路线](核心课程索引_第01到41课.md)或
 [语言模型专修路线](语言模型零基础_课程索引.md)中选择入口。
 
@@ -24,6 +25,7 @@
 |---|---|
 | `01_...ipynb` ～ `46_...ipynb` | ASR 主线学习版，按数字顺序学习 |
 | `基础_01_...ipynb` ～ `基础_06_...ipynb` | Python/PyTorch 桥梁课 |
+| `音频基础_01_...ipynb` ～ `音频基础_06_...ipynb` | 从振动、dB、PCM、SNR 到真实 WAV 的音频零基础桥梁课 |
 | `语言模型零基础_01_...ipynb` ～ `09_...ipynb` | N-gram、OpenFst、WFST 与前沿 LM 专修 |
 | `专题_...ipynb` | CTC、流式、WFST、部署、前端、语义和真实评测实验室 |
 | `代码伴读_...`、`学习中枢_...`、`结课项目_...` | 辅助入口、诊断与综合项目 |
@@ -34,6 +36,9 @@
 
 - 1 本含 14 个可运行小节的零基础逐行代码伴读；
 - 6 节 Python/PyTorch 桥梁课；
+- 6 节音频零基础桥梁课；
+- 1 套 Audacity、Praat、Sonic Visualiser、Audition/Cool Edit [专业软件分析实验](../AUDIO_SOFTWARE_GUIDE.md)；
+- 1 套含 24 条盲题、正常对照和命令行自测的 [音频问题诊断题库](../AUDIO_DIAGNOSIS_PRACTICE.md)；
 - 46 节 ASR 主线课；
 - 9 节 ASR 语言模型专修课；
 - 1 个学习中枢、9 个专题实验室；
@@ -53,13 +58,16 @@ uv sync --locked
 uv run jupyter lab
 ```
 
-代码读起来仍然吃力时，从 [零基础逐行代码伴读](代码伴读_零基础逐行理解ASR.ipynb) 开始，然后进入 [PyTorch 零基础课程索引](PyTorch零基础课程索引.md)。已经会 Python、Tensor、`nn.Module` 和 `DataLoader` 时，可直接进入 [第 1～41 课核心路线](核心课程索引_第01到41课.md)。
+代码读起来仍然吃力时，从 [零基础逐行代码伴读](代码伴读_零基础逐行理解ASR.ipynb) 开始，然后进入 [PyTorch 零基础课程索引](PyTorch零基础课程索引.md)。无论代码基础怎样，音频概念不扎实时都先完成 [音频零基础桥梁路线](音频零基础课程索引.md)，再进入 [第 1～41 课核心路线](核心课程索引_第01到41课.md)。
 
 ## 2. 从零到完整系统的推荐顺序
 
 ```text
 零基础逐行代码伴读 01～14
 → PyTorch 导学与基础 01～06
+→ 音频零基础 01～06：振动、周期、RMS、dB、PCM、SNR、WAV 审计
+→ 专业音频软件实验：Audacity 波形/频谱 + Praat F0/Formant/TextGrid
+→ 音频盲诊断：幅值、削波、DC、噪声、回声、采样率和多通道问题
 → ASR 主线 01～18：声音、Log-Mel、编码器、CTC、流式
 → 语言模型专修 01～08：N-gram、OpenFst、WFST、lattice
 → ASR 主线 19～41：LM/WFST、部署、音频前端、语义后处理
@@ -77,6 +85,9 @@ uv run jupyter lab
 |---|---:|---|
 | 代码伴读 | 伴读 01～14 | 变量、函数、shape、dtype/device、模型、训练、CTC、cache 与排错 |
 | Python/PyTorch 预备 | 导学＋基础 01～06 | Tensor、shape、autograd、`nn.Module`、变长语音 Batch |
+| 音频零基础桥梁 | 音频基础 01～06 | 从物理振动到 PCM 数组、dB、SNR 与真实 WAV 审计 |
+| 专业音频软件实验 | GUI 实操 | Audacity、Praat、Sonic Visualiser、Audition/Cool Edit 概念映射与跨工具核对 |
+| 音频盲诊断 | 24 条题 | 幅值、频谱、时间连续性、采样率、多通道问题的证据化诊断 |
 | 声音与特征 | 01～06 | 从波形实现并验证 STFT、Mel 与 Log-Mel |
 | 声学编码器 | 07～09 | mask、Linear、Conv1d、局部上下文与下采样 |
 | CTC | 10～14 | 对齐路径、动态规划、`CTCLoss`、Prefix Beam、最小训练 |

@@ -19,6 +19,8 @@
 - `.local_data/fsdd-26eb9aaf/recordings/`：本地完整 3,000 条录音缓存，不提交 Git
 - `artifacts/fsdd_speaker_disjoint_*`：由固定版本训练得到的 manifest、指标和 CTC checkpoint
 - `artifacts/fsdd_loso_results.json` 与 `artifacts/fsdd_loso_checkpoints/`：六折说话人重采样指标和各折选中 checkpoint
+- `data/audio_software_lab/05_noise_profile_then_speech_snr10db.wav` 与 `07_real_speech_digit_zero_8khz.wav`：用于 Audacity/Praat GUI 实验的加噪派生语音和原始教学副本
+- `data/audio_diagnosis_lab/reference_clean_speech.wav` 与 `case_01.wav`～`case_24.wav`：由课程语音生成的盲诊断练习，继续遵守 FSDD 的 CC BY-SA 4.0
 
 拼接、重采样、加噪、回声和多麦克风信号属于课程生成的教学派生数据。公开分发这些数据时应保留本文件、上游署名和 CC BY-SA 4.0 要求。
 
@@ -28,6 +30,8 @@
 - `python -m fsdd_generalization.data`：下载固定版本、校验 SHA256，并验证 3,000 条音频契约；
 - 各 Notebook：在内存中生成噪声、回声、增益和多通道模拟；
 - `scripts/build_*`：生成课程 Notebook；不下载或使用私有数据。
+- `scripts/build_audio_software_lab_assets.py`：生成专业音频软件实验的纯音、DC、削波、双声道延迟和 FSDD 派生语音，并写出测量 manifest。
+- `scripts/build_audio_diagnosis_practice.py`：确定性生成盲诊断题、公开 manifest 和答案键；`scripts/audio_diagnosis_quiz.py` 分级核对。
 
 不要向仓库提交包含个人录音、API 密钥、访问 token 或未经授权数据的文件。
 

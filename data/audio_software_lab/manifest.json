@@ -1,0 +1,129 @@
+{
+  "format_version": 1,
+  "purpose": "Deterministic reference audio for GUI audio-analysis software labs.",
+  "important": [
+    "Measurements may differ slightly because tools use different windows, scaling, channel rules, and dB references.",
+    "Praat intensity is not a calibrated physical SPL measurement unless the recording chain is calibrated.",
+    "Always preserve the original file and perform destructive edits only on a copy."
+  ],
+  "assets": [
+    {
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "samples_per_channel": 16000,
+      "duration_seconds": 1.0,
+      "peak": 0.251188643150958,
+      "peak_dbfs": -12.0,
+      "rms": 0.17761719292909012,
+      "rms_dbfs": -15.01029995663982,
+      "dc_mean": 4.138633880046427e-16,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "01_calibration_440hz_peak_minus12dbfs.wav",
+      "notes": "1 s mono float WAV; 440 Hz sine; peak -12 dBFS; sine RMS is about -15.01 dBFS.",
+      "expected_dominant_frequencies_hz": [
+        440
+      ]
+    },
+    {
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "samples_per_channel": 16000,
+      "duration_seconds": 1.0,
+      "peak": 0.5272401454600835,
+      "peak_dbfs": -5.559830576475195,
+      "rms": 0.27829840100151476,
+      "rms_dbfs": -11.109785779047757,
+      "dc_mean": 6.067923941088793e-16,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "02_two_tones_440hz_1000hz.wav",
+      "notes": "Two stationary tones for FFT size, window, and spectrogram comparison.",
+      "expected_dominant_frequencies_hz": [
+        440,
+        1000
+      ]
+    },
+    {
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "samples_per_channel": 16000,
+      "duration_seconds": 1.0,
+      "peak": 0.37,
+      "peak_dbfs": -8.6359655186601,
+      "rms": 0.21365860619221488,
+      "rms_dbfs": -13.405592181296825,
+      "dc_mean": 0.12000000000000001,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "03_dc_offset_220hz.wav",
+      "notes": "Waveform centre is shifted upward by a DC mean of about +0.12.",
+      "expected_dominant_frequencies_hz": [
+        0,
+        220
+      ]
+    },
+    {
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "samples_per_channel": 16000,
+      "duration_seconds": 1.0,
+      "peak": 1.0,
+      "peak_dbfs": 0.0,
+      "rms": 0.8695233326107435,
+      "rms_dbfs": -1.214375194717343,
+      "dc_mean": 1.8405277302235844e-15,
+      "clipped_ratio_at_0_999": 0.625,
+      "file": "04_hard_clipped_440hz.wav",
+      "notes": "Flat waveform tops and extra harmonics demonstrate hard clipping.",
+      "expected_dominant_frequencies_hz": [
+        440
+      ],
+      "expected_extra_content": "odd harmonics caused by clipping"
+    },
+    {
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "samples_per_channel": 18296,
+      "duration_seconds": 1.1435,
+      "peak": 0.7284795867738231,
+      "peak_dbfs": -2.7516522677410804,
+      "rms": 0.11159644287406925,
+      "rms_dbfs": -19.046992965456923,
+      "dc_mean": 3.210600171618253e-05,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "05_noise_profile_then_speech_snr10db.wav",
+      "notes": "First 0.5 s is noise-only; remaining region is speech mixed at measured 10 dB SNR.",
+      "noise_only_seconds": 0.5,
+      "speech_region_target_snr_db": 10.0,
+      "speech_region_measured_snr_db": 10.0
+    },
+    {
+      "sample_rate_hz": 16000,
+      "channels": 2,
+      "samples_per_channel": 16000,
+      "duration_seconds": 1.0,
+      "peak": 0.5,
+      "peak_dbfs": -6.020599913279624,
+      "rms": 0.3534740267721322,
+      "rms_dbfs": -9.032849851992705,
+      "dc_mean": 0.00011481657937647569,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "06_stereo_right_delayed_1ms.wav",
+      "notes": "Stereo test: right channel is delayed by 16 samples, exactly 1 ms at 16 kHz.",
+      "right_channel_delay_samples": 16,
+      "right_channel_delay_ms": 1.0
+    },
+    {
+      "sample_rate_hz": 8000,
+      "channels": 1,
+      "samples_per_channel": 5148,
+      "duration_seconds": 0.6435,
+      "peak": 0.737396240234375,
+      "peak_dbfs": -2.645981621270866,
+      "rms": 0.13679308475688584,
+      "rms_dbfs": -17.278717135334908,
+      "dc_mean": -7.244071575126263e-06,
+      "clipped_ratio_at_0_999": 0.0,
+      "file": "07_real_speech_digit_zero_8khz.wav",
+      "notes": "Real FSDD utterance for Praat pitch, formant, intensity, and TextGrid practice."
+    }
+  ]
+}

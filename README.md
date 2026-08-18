@@ -13,7 +13,7 @@ uv sync --locked
 uv run jupyter lab
 ```
 
-如果很多代码还不会，先打开 [零基础逐行代码伴读](notebooks/代码伴读_零基础逐行理解ASR.ipynb)｜[已运行对照](notebooks/_executed/pytorch_foundations/代码伴读_零基础逐行理解ASR_已运行.ipynb)。它用 14 个可运行小节逐行解释变量、函数、shape、dtype/device、模型、训练循环、声学前端、CTC、流式 cache 和排错。然后按 [PyTorch 零基础 6 节课程索引](notebooks/PyTorch零基础课程索引.md) 学习，再从 [Notebook 学习中心](notebooks/README.md) 进入完整课程。题目和闭卷验收可以之后再做。
+如果很多代码还不会，先打开 [零基础逐行代码伴读](notebooks/代码伴读_零基础逐行理解ASR.ipynb)｜[已运行对照](notebooks/_executed/pytorch_foundations/代码伴读_零基础逐行理解ASR_已运行.ipynb)。它用 14 个可运行小节逐行解释变量、函数、shape、dtype/device、模型、训练循环、声学前端、CTC、流式 cache 和排错。然后按 [PyTorch 零基础 6 节课程索引](notebooks/PyTorch零基础课程索引.md) 学习，再完成新增的 [音频零基础 6 节桥梁课](notebooks/音频零基础课程索引.md)、[专业音频软件分析实验](AUDIO_SOFTWARE_GUIDE.md)和[24 条音频问题盲诊断](AUDIO_DIAGNOSIS_PRACTICE.md)，最后从 [Notebook 学习中心](notebooks/README.md) 进入 ASR 主线。桥梁课从振动、周期、RMS、dB、PCM、位深、通道、谐波、噪声与 SNR 讲到真实 WAV 审计，并使用 Audacity、Praat、Sonic Visualiser 或 Audition 把软件读数与代码结果交叉验证。
 
 如果你的目标是从零学习 N-gram、OpenFst 与 ASR 语言模型，直接从 [9 课独立课程索引](notebooks/语言模型零基础_课程索引.md) 开始；这条路线不要求先学完声学模型课程，并带有可修改实验、交互控件、真实 OpenFst/KenLM 命令、失败对照和自动判题。运行第 3 课前按 [安装与排错指南](ASR_LM_ENVIRONMENT.md) 配好 WSL 工具链，实验时可查 [OpenFst/KenLM 速查表](ASR_LM_OPENFST_KENLM_CHEATSHEET.md)。
 
@@ -30,6 +30,9 @@ uv run jupyter lab
 |---|---:|---|
 | 逐行代码伴读 | 14 个小节 | Python、shape、模型、训练、CTC、cache、排错 |
 | PyTorch 零基础 | 导学＋基础 1～6 | Python、Tensor、广播、autograd、nn.Module、DataLoader |
+| 音频零基础桥梁 | 音频基础 1～6 | 振动、波形、周期、RMS、dB、PCM、位深、通道、谐波、SNR、WAV 审计 |
+| 专业音频软件实验 | 1 套跨软件实验 | Audacity 波形/频谱、Praat F0/Formant/TextGrid、Sonic Visualiser、Audition/Cool Edit 对照 |
+| 音频问题盲诊断 | 24 条盲题＋2 条正常对照 | 幅值、削波、DC、噪声、滤波、丢失、回声、采样率、多通道与混叠诊断 |
 | 声音与特征 | 1～6 | 采样、dB、FFT、STFT、Mel、Log-Mel |
 | 张量与编码器 | 7～9 | Padding、Mask、PyTorch、Conv1d、下采样 |
 | CTC | 10～14 | blank、动态规划、CTCLoss、Prefix Beam、真实音频训练 |
@@ -47,10 +50,10 @@ CTC 是课程主轴。完成第 10～13 课后，使用 [CTC 可视化实验室]
 
 每课按以下顺序完成：
 
-1. 不运行代码，完成 3 题课前诊断。
+1. 不运行代码，完成课前诊断和“知识接力”闭卷回忆。
 2. 阅读一小节，在运行前预测图形、shape 或数值。
 3. 每次只修改一个参数，记录“预测—结果—解释”。
-4. 完成 12 道分层强化题，达到 19/24 分再进入下一课。
+4. 完成分层强化题，达到课程门槛再进入下一课；音频桥梁和主线按 19/24 执行。
 5. 从空白 cell 重写本课核心函数。
 6. 在第 1、7、30 天闭卷复习。
 

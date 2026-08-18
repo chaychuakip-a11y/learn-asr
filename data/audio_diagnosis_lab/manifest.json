@@ -1,0 +1,152 @@
+{
+  "format_version": 1,
+  "reference": "reference_clean_speech.wav",
+  "case_count": 24,
+  "workflow": "Inspect metadata, listen, waveform, channels, spectrum, spectrogram, then state one primary diagnosis with evidence.",
+  "cases": [
+    {
+      "case_id": "case_01",
+      "file": "case_01.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_02",
+      "file": "case_02.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_03",
+      "file": "case_03.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_04",
+      "file": "case_04.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_05",
+      "file": "case_05.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_06",
+      "file": "case_06.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_07",
+      "file": "case_07.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_08",
+      "file": "case_08.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_09",
+      "file": "case_09.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_10",
+      "file": "case_10.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_11",
+      "file": "case_11.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_12",
+      "file": "case_12.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_13",
+      "file": "case_13.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_14",
+      "file": "case_14.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_15",
+      "file": "case_15.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_16",
+      "file": "case_16.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_17",
+      "file": "case_17.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_18",
+      "file": "case_18.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_19",
+      "file": "case_19.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_20",
+      "file": "case_20.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_21",
+      "file": "case_21.wav",
+      "difficulty": "intermediate",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_22",
+      "file": "case_22.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_23",
+      "file": "case_23.wav",
+      "difficulty": "beginner",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    },
+    {
+      "case_id": "case_24",
+      "file": "case_24.wav",
+      "difficulty": "advanced",
+      "sha256_note": "Use the filename as the stable exercise ID; do not infer the answer from order."
+    }
+  ]
+}

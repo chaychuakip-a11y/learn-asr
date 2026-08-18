@@ -1,0 +1,656 @@
+{
+  "format_version": 1,
+  "seed": 20260818,
+  "source": "data/spoken_digits_0_to_9_16k.wav (FSDD-derived; see DATA_SOURCES.md)",
+  "cases": [
+    {
+      "case_id": "case_01",
+      "file": "case_01.wav",
+      "difficulty": "intermediate",
+      "issue": "impulsive_clicks",
+      "severity": "medium",
+      "audible": "several short sharp clicks",
+      "visible": "isolated near-vertical impulses; broadband vertical stripes in spectrogram",
+      "first_checks": [
+        "zoom waveform",
+        "spectrogram vertical stripes",
+        "time positions"
+      ],
+      "explanation": "Clicks are short in time and therefore broad in frequency. They should not be treated like steady background noise.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.98,
+        "peak_dbfs": -0.175478486150103,
+        "rms": 0.05559405904793902,
+        "rms_dbfs": -25.099432319636673,
+        "dc_mean": -7.277321909297982e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_02",
+      "file": "case_02.wav",
+      "difficulty": "advanced",
+      "issue": "single_echo_120ms",
+      "severity": "strong",
+      "audible": "distinct delayed repetition",
+      "visible": "similar waveform pattern repeats 120 ms later; comb-like spectrum",
+      "first_checks": [
+        "listen for repeat",
+        "autocorrelation",
+        "compare patterns 120 ms apart"
+      ],
+      "explanation": "A single delayed copy was mixed at 120 ms. It is an echo, not a long diffuse reverberation tail.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.5562600124249327,
+        "peak_dbfs": -5.094443176786012,
+        "rms": 0.0596439130867362,
+        "rms_dbfs": -24.4886774263702,
+        "dc_mean": -5.820561645785878e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_03",
+      "file": "case_03.wav",
+      "difficulty": "advanced",
+      "issue": "clean_stereo",
+      "severity": "none",
+      "audible": "centred normal stereo copy",
+      "visible": "two identical healthy channels",
+      "first_checks": [
+        "channels",
+        "per-channel statistics",
+        "correlation"
+      ],
+      "explanation": "This is a second clean control. Two identical channels are not automatically a fault, though they carry redundant information.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 2,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.05389381688352959,
+        "rms_dbfs": -25.36922115170011,
+        "dc_mean": -3.5756869305239582e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_04",
+      "file": "case_04.wav",
+      "difficulty": "intermediate",
+      "issue": "narrowband_whistle_2800hz",
+      "severity": "medium",
+      "audible": "constant high-pitched whistle",
+      "visible": "thin horizontal line at 2800 Hz throughout the spectrogram",
+      "first_checks": [
+        "spectrogram horizontal line",
+        "Plot Spectrum peak",
+        "select silence"
+      ],
+      "explanation": "A stationary narrowband interferer is better diagnosed by its exact frequency than by a generic noise label.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.47151519523543056,
+        "peak_dbfs": -6.530086139103014,
+        "rms": 0.06646634370712746,
+        "rms_dbfs": -23.5479642194602,
+        "dc_mean": -3.5756869305754794e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_05",
+      "file": "case_05.wav",
+      "difficulty": "intermediate",
+      "issue": "asymmetric_clipping",
+      "severity": "strong",
+      "audible": "distorted with asymmetric waveform character",
+      "visible": "positive peaks flatten near +0.32 while negative peaks reach about -0.85; DC may shift",
+      "first_checks": [
+        "compare positive/negative limits",
+        "DC mean",
+        "spectrum"
+      ],
+      "explanation": "Only one side clips early, often indicating biased analogue electronics or asymmetric processing.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.85,
+        "peak_dbfs": -1.4116214857141456,
+        "rms": 0.13740842953200047,
+        "rms_dbfs": -17.239732479890534,
+        "dc_mean": -0.004075919436930522,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_06",
+      "file": "case_06.wav",
+      "difficulty": "advanced",
+      "issue": "stereo_channel_delay_2ms",
+      "severity": "medium",
+      "audible": "subtle spatial/comb-filter effect when downmixed",
+      "visible": "right channel events occur 32 samples (2 ms) later",
+      "first_checks": [
+        "zoom both channels",
+        "cross-correlation",
+        "mono spectrum"
+      ],
+      "explanation": "A small inter-channel delay can damage mono downmix or beamforming even when both channels look individually clean.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 2,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.05387746385410055,
+        "rms_dbfs": -25.371857115734066,
+        "dc_mean": -8.597956357423917e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_07",
+      "file": "case_07.wav",
+      "difficulty": "beginner",
+      "issue": "dropouts",
+      "severity": "strong",
+      "audible": "brief unnatural gaps",
+      "visible": "rectangular zero-valued gaps cutting through speech",
+      "first_checks": [
+        "waveform zero gaps",
+        "gap durations",
+        "spectrogram missing bands"
+      ],
+      "explanation": "Samples were replaced by zeros. This differs from natural silence because the transitions are abrupt and can cut through words.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.0520131897877811,
+        "rms_dbfs": -25.67773023280835,
+        "dc_mean": 9.206219908366115e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_08",
+      "file": "case_08.wav",
+      "difficulty": "advanced",
+      "issue": "naive_resampling_aliasing",
+      "severity": "strong",
+      "audible": "rough, aliased high-frequency distortion",
+      "visible": "stair-step waveform and mirrored/incorrect spectral content",
+      "first_checks": [
+        "zoom samples",
+        "spectrogram aliases",
+        "compare with proper low-pass resampling"
+      ],
+      "explanation": "The signal was downsampled by taking every fourth sample without anti-alias filtering, then repeated back to 16 kHz.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.41170014495754814,
+        "peak_dbfs": -7.708379601791733,
+        "rms": 0.05393968099812839,
+        "rms_dbfs": -25.361832526280356,
+        "dc_mean": -2.1782460136674472e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_09",
+      "file": "case_09.wav",
+      "difficulty": "advanced",
+      "issue": "heavy_nonlinear_compression",
+      "severity": "strong",
+      "audible": "unnaturally dense and distorted",
+      "visible": "quiet and loud parts become similar; rounded saturation; reduced crest factor; extra harmonics",
+      "first_checks": [
+        "crest factor",
+        "waveform envelope",
+        "spectrum harmonics"
+      ],
+      "explanation": "Strong nonlinear saturation reduced dynamic range without producing exact full-scale flat tops.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.88,
+        "peak_dbfs": -1.1103465569966273,
+        "rms": 0.2030517797540958,
+        "rms_dbfs": -13.847863991098137,
+        "dc_mean": 0.0007605585482643425,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_10",
+      "file": "case_10.wav",
+      "difficulty": "beginner",
+      "issue": "wrong_sample_rate_metadata",
+      "severity": "strong",
+      "audible": "plays twice as long and about one octave lower",
+      "visible": "header reports 8 kHz and duration doubles even though sample values match the 16 kHz reference",
+      "first_checks": [
+        "sample rate metadata",
+        "duration",
+        "pitch vs reference"
+      ],
+      "explanation": "The same 16 kHz samples were labelled as 8 kHz without resampling. This is a time-axis metadata error, not a gain error.",
+      "measurements": {
+        "sample_rate_hz": 8000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 6.4,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.05389381688352959,
+        "rms_dbfs": -25.36922115170011,
+        "dc_mean": -3.5756869305239222e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_11",
+      "file": "case_11.wav",
+      "difficulty": "beginner",
+      "issue": "clean",
+      "severity": "none",
+      "audible": "natural reference speech",
+      "visible": "centred waveform with headroom; no persistent narrow spectral line",
+      "first_checks": [
+        "metadata",
+        "peak/RMS",
+        "waveform",
+        "spectrogram"
+      ],
+      "explanation": "This is a clean control. A diagnosis workflow must allow the answer 'no obvious injected fault'.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.05389381688352959,
+        "rms_dbfs": -25.36922115170011,
+        "dc_mean": -3.5756869305239222e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_12",
+      "file": "case_12.wav",
+      "difficulty": "beginner",
+      "issue": "right_channel_silent",
+      "severity": "strong",
+      "audible": "plays from one side; mono downmix is quieter",
+      "visible": "left waveform is present and right waveform is exactly zero",
+      "first_checks": [
+        "channel count",
+        "separate channel waveforms",
+        "per-channel RMS"
+      ],
+      "explanation": "One stereo channel contains no signal. A combined statistic can hide which channel failed.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 2,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.03810868338236982,
+        "rms_dbfs": -28.379521108339922,
+        "dc_mean": -1.7878434652619791e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_13",
+      "file": "case_13.wav",
+      "difficulty": "intermediate",
+      "issue": "broadband_white_noise",
+      "severity": "strong",
+      "audible": "steady hiss over speech",
+      "visible": "raised broadband noise floor across most frequencies and silent gaps",
+      "first_checks": [
+        "silence-region spectrum",
+        "spectrogram background",
+        "estimate SNR"
+      ],
+      "explanation": "White noise was mixed at 5 dB SNR. It is broadband, unlike a narrow hum or whistle.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.44414450508255826,
+        "peak_dbfs": -7.049514131511768,
+        "rms": 0.06173667629412054,
+        "rms_dbfs": -24.18913510510505,
+        "dc_mean": 0.00029336771734237766,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_14",
+      "file": "case_14.wav",
+      "difficulty": "intermediate",
+      "issue": "lowpass_muffled",
+      "severity": "strong",
+      "audible": "muffled, missing consonant brightness",
+      "visible": "strong attenuation above about 1200 Hz",
+      "first_checks": [
+        "spectrogram high-frequency loss",
+        "spectrum vs reference",
+        "listen to consonants"
+      ],
+      "explanation": "An overly aggressive low-pass filter removed high-frequency speech cues.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.41558155339787234,
+        "peak_dbfs": -7.626874758163945,
+        "rms": 0.05287502693160602,
+        "rms_dbfs": -25.534987968226478,
+        "dc_mean": -3.6152876556003644e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_15",
+      "file": "case_15.wav",
+      "difficulty": "intermediate",
+      "issue": "truncated_boundaries",
+      "severity": "strong",
+      "audible": "speech starts and ends abruptly, losing content",
+      "visible": "first/last events are cut with little or no surrounding context",
+      "first_checks": [
+        "duration vs reference",
+        "start/end zoom",
+        "transcript alignment"
+      ],
+      "explanation": "The recording was cropped inside speech. Endpoint logic must preserve words and context, not merely minimise silence.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 40160,
+        "duration_seconds": 2.51,
+        "peak": 0.2712114309380824,
+        "peak_dbfs": -11.333840198111888,
+        "rms": 0.034474780664305836,
+        "rms_dbfs": -29.249969764295148,
+        "dc_mean": -2.362624465897031e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_16",
+      "file": "case_16.wav",
+      "difficulty": "advanced",
+      "issue": "stereo_polarity_inversion",
+      "severity": "strong",
+      "audible": "stereo may sound wide; equal-weight mono sum cancels nearly completely",
+      "visible": "right waveform is the exact negative of the left",
+      "first_checks": [
+        "overlay channels",
+        "correlation",
+        "mono sum"
+      ],
+      "explanation": "The channels have opposite polarity. Each channel alone is valid, but naive mono downmix can cancel the speech.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 2,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.45,
+        "peak_dbfs": -6.935749724493126,
+        "rms": 0.05389381688352959,
+        "rms_dbfs": -25.36922115170011,
+        "dc_mean": 0.0,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_17",
+      "file": "case_17.wav",
+      "difficulty": "intermediate",
+      "issue": "highpass_thin",
+      "severity": "strong",
+      "audible": "thin or telephone-like, missing low-frequency body",
+      "visible": "strong attenuation below about 900 Hz",
+      "first_checks": [
+        "spectrum low-frequency loss",
+        "spectrogram",
+        "compare vowel energy"
+      ],
+      "explanation": "An overly aggressive high-pass filter removed the low-frequency foundation and some vowel/formant information.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.1096876750139813,
+        "peak_dbfs": -19.19684337815593,
+        "rms": 0.011821559644118452,
+        "rms_dbfs": -38.54650444515175,
+        "dc_mean": 9.175165021622811e-07,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_18",
+      "file": "case_18.wav",
+      "difficulty": "beginner",
+      "issue": "hard_clipping",
+      "severity": "strong",
+      "audible": "harsh distortion",
+      "visible": "flat tops at both +1 and -1; strong added harmonics; clipped ratio above zero",
+      "first_checks": [
+        "waveform flat tops",
+        "clipped samples",
+        "spectrum harmonics"
+      ],
+      "explanation": "The signal exceeded digital full scale and was hard-clipped. Turning it down cannot reconstruct the lost shape.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 1.0,
+        "peak_dbfs": 0.0,
+        "rms": 0.23307422329314886,
+        "rms_dbfs": -12.650115087336975,
+        "dc_mean": 0.00045378735973415824,
+        "clipped_ratio_at_0_999": 0.00927734375
+      }
+    },
+    {
+      "case_id": "case_19",
+      "file": "case_19.wav",
+      "difficulty": "intermediate",
+      "issue": "low_bit_quantization",
+      "severity": "strong",
+      "audible": "grainy quantisation noise",
+      "visible": "waveform uses only a small set of horizontal amplitude levels",
+      "first_checks": [
+        "zoom to samples",
+        "count amplitude levels",
+        "noise floor"
+      ],
+      "explanation": "The signal was quantised to only 5 bits (32 levels). The staircase is an amplitude-resolution problem, not a low sample-rate problem.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.4193548387096775,
+        "peak_dbfs": -7.5483668305487175,
+        "rms": 0.059564245345855145,
+        "rms_dbfs": -24.50028712351051,
+        "dc_mean": 0.004088961693548379,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_20",
+      "file": "case_20.wav",
+      "difficulty": "advanced",
+      "issue": "gain_pumping",
+      "severity": "medium",
+      "audible": "volume repeatedly swells and falls",
+      "visible": "slow periodic envelope at about 1.7 Hz",
+      "first_checks": [
+        "RMS over time",
+        "waveform envelope",
+        "listen for periodic gain"
+      ],
+      "explanation": "A periodic gain envelope simulates pumping from poor AGC/compression. The underlying pitch need not change.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.31862098055414434,
+        "peak_dbfs": -9.934512603410194,
+        "rms": 0.040709165698149065,
+        "rms_dbfs": -27.80615596096172,
+        "dc_mean": -3.4707575132788486e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_21",
+      "file": "case_21.wav",
+      "difficulty": "intermediate",
+      "issue": "mains_hum_50hz",
+      "severity": "medium",
+      "audible": "low continuous hum",
+      "visible": "persistent horizontal spectral lines at 50 Hz and 100 Hz",
+      "first_checks": [
+        "long-window spectrum",
+        "spectrogram low frequencies",
+        "silence regions"
+      ],
+      "explanation": "A mains-frequency fundamental plus harmonic was added. Check the region frequency used by the local power grid before assuming 50 or 60 Hz.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.5215061608046727,
+        "peak_dbfs": -5.654811133524873,
+        "rms": 0.08201795685860662,
+        "rms_dbfs": -21.721821071632675,
+        "dc_mean": -3.5756869305217377e-06,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_22",
+      "file": "case_22.wav",
+      "difficulty": "beginner",
+      "issue": "low_level",
+      "severity": "strong",
+      "audible": "very quiet but otherwise recognisable",
+      "visible": "waveform remains centred and undistorted but peak/RMS are about 21.9 dB lower",
+      "first_checks": [
+        "peak dBFS",
+        "RMS dBFS",
+        "compare shape with reference"
+      ],
+      "explanation": "Gain is too low. Raising it later also raises the recorded noise floor; low level is not the same as silence.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.036000000000000004,
+        "peak_dbfs": -28.873949984654253,
+        "rms": 0.004311505350682367,
+        "rms_dbfs": -47.307421411861235,
+        "dc_mean": -2.860549544419155e-07,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_23",
+      "file": "case_23.wav",
+      "difficulty": "beginner",
+      "issue": "dc_offset",
+      "severity": "medium",
+      "audible": "often subtle; possible clicks when editing boundaries",
+      "visible": "waveform centre is shifted upward; non-zero mean; energy near 0 Hz",
+      "first_checks": [
+        "waveform centre",
+        "DC mean",
+        "0 Hz spectrum region"
+      ],
+      "explanation": "A constant offset consumes headroom and can create clicks at cuts, but it is not useful speech energy.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.495,
+        "peak_dbfs": -6.107896021328626,
+        "rms": 0.18390846973711802,
+        "rms_dbfs": -14.707965385288427,
+        "dc_mean": 0.1799974970191486,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    },
+    {
+      "case_id": "case_24",
+      "file": "case_24.wav",
+      "difficulty": "advanced",
+      "issue": "reverberation",
+      "severity": "strong",
+      "audible": "smeared room-like tail rather than one repeat",
+      "visible": "energy persists after speech events; onsets and gaps are smeared",
+      "first_checks": [
+        "spectrogram decay tails",
+        "speech gap energy",
+        "compare with single echo"
+      ],
+      "explanation": "Several decaying delayed copies approximate reverberation. The main clue is distributed decay, not one clearly separated repeat.",
+      "measurements": {
+        "sample_rate_hz": 16000,
+        "channels": 1,
+        "samples_per_channel": 51200,
+        "duration_seconds": 3.2,
+        "peak": 0.6024768041797474,
+        "peak_dbfs": -4.401193382054786,
+        "rms": 0.06412516890178395,
+        "rms_dbfs": -23.859429559468857,
+        "dc_mean": -3.222841607150487e-05,
+        "clipped_ratio_at_0_999": 0.0
+      }
+    }
+  ]
+}
