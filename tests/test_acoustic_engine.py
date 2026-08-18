@@ -7,8 +7,10 @@ from itertools import product
 from collections import defaultdict
 import math
 import json
+from types import SimpleNamespace
 
 import torch
+import nbformat
 from fastapi.testclient import TestClient
 
 from acoustic_engine.api import create_app
@@ -20,6 +22,8 @@ from acoustic_engine.language_model import AddKBigramLanguageModel, ShallowFusio
 from acoustic_engine.streaming import StreamingAcousticEngine
 from acoustic_engine.benchmark import summarize
 from acoustic_engine.tutor import QUESTIONS, current_question, is_correct, load_progress, record_attempt
+from acoustic_engine.challenge import CHALLENGES, check_challenge, coding_passed_ids, record_result
+from acoustic_engine.mastery import build_gates, format_report, validate_executed_notebook
 
 
 class FrontendTests(unittest.TestCase):
@@ -336,6 +340,93 @@ class TutorTests(unittest.TestCase):
             record_attempt(path, QUESTIONS[0], "8000", False)
             progress = load_progress(path)
         self.assertEqual(current_question(progress), QUESTIONS[0])
+
+
+class ChallengeTests(unittest.TestCase):
+    def reference_module(self) -> SimpleNamespace:
+        class StreamingCTCCollapse:
+            def __init__(self, blank_id: int = 0):
+                self.blank_id = blank_id
+                self.previous = None
+                self.output = []
+
+            def accept(self, frame_ids):
+                for class_id in frame_ids:
+                    if class_id != self.blank_id and class_id != self.previous:
+                        self.output.append(class_id)
+                    self.previous = class_id
+                return list(self.output)
+
+        return SimpleNamespace(
+            sample_count=lambda sample_rate, seconds: round(sample_rate * seconds),
+            frame_count=lambda n, n_fft, hop: 1 + (n - n_fft) // hop,
+            ctc_collapse=lambda ids, blank_id=0: self._reference_collapse(ids, blank_id),
+            StreamingCTCCollapse=StreamingCTCCollapse,
+            add_k_bigram_probability=lambda context, bigram, vocab, k=0.1: (bigram + k) / (context + k * vocab),
+            real_time_factor=lambda processing, audio: processing / audio if audio > 0 else (_ for _ in ()).throw(ValueError()),
+        )
+
+    @staticmethod
+    def _reference_collapse(ids, blank_id=0):
+        output = []
+        previous = None
+        for class_id in ids:
+            if class_id != blank_id and class_id != previous:
+                output.append(class_id)
+            previous = class_id
+        return output
+
+    def test_reference_behaviour_passes_all_challenges(self) -> None:
+        module = self.reference_module()
+        for challenge in CHALLENGES:
+            passed, message = check_challenge(challenge, module)
+            self.assertTrue(passed, f"{challenge.id}: {message}")
+
+    def test_unimplemented_challenge_has_beginner_friendly_failure(self) -> None:
+        module = SimpleNamespace(sample_count=lambda *_: (_ for _ in ()).throw(NotImplementedError("请完成")))
+        passed, message = check_challenge(CHALLENGES[0], module)
+        self.assertFalse(passed)
+        self.assertEqual(message, "请完成")
+
+    def test_challenge_progress_is_recorded_without_losing_tutor_data(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "learning_progress.json"
+            path.write_text(json.dumps({"tutor": {"passed": 1}}, ensure_ascii=False), encoding="utf-8")
+            record_result(path, CHALLENGES[0], True, "ok")
+            restored = load_progress(path)
+        self.assertEqual(restored["tutor"], {"passed": 1})
+        self.assertEqual(coding_passed_ids(restored), {"sampling"})
+
+
+class MasteryTests(unittest.TestCase):
+    def test_empty_progress_cannot_claim_mastery(self) -> None:
+        gates = build_gates({})
+        self.assertEqual(len(gates), 5)
+        self.assertFalse(any(gate.passed for gate in gates))
+        self.assertIn("尚不能证明已经学会", format_report({}))
+
+    def test_executed_notebook_validation_rejects_unexecuted_cells(self) -> None:
+        notebook = nbformat.v4.new_notebook(
+            cells=[nbformat.v4.new_code_cell("x = 1")]
+        )
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "unexecuted.ipynb"
+            nbformat.write(notebook, path)
+            with self.assertRaisesRegex(ValueError, "未执行"):
+                validate_executed_notebook(path)
+
+    def test_executed_notebook_validation_records_hash(self) -> None:
+        cell = nbformat.v4.new_code_cell("x = 1")
+        cell.execution_count = 1
+        cell.outputs = [nbformat.v4.new_output("stream", name="stdout", text="ok\n")]
+        notebook = nbformat.v4.new_notebook(cells=[cell])
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "executed.ipynb"
+            nbformat.write(notebook, path)
+            evidence = validate_executed_notebook(path)
+        self.assertTrue(evidence["verified"])
+        self.assertEqual(evidence["code_cells"], 1)
+        self.assertEqual(len(evidence["sha256"]), 64)
 
 
 if __name__ == "__main__":

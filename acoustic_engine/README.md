@@ -14,6 +14,10 @@ WAV → Log-Mel [T,F] → Conv + BiGRU → logits [T,C] → CTC collapse → 数
 uv run python -m unittest discover -s tests -p "test_acoustic_engine.py"
 uv run python -m acoustic_engine.tutor
 uv run python -m acoustic_engine.tutor --status
+uv run python -m acoustic_engine.challenge --list
+uv run python -m acoustic_engine.challenge --check sampling
+uv run python -m acoustic_engine.mastery --status
+uv run python -m acoustic_engine.mastery --system-audit
 uv run python -m acoustic_engine.train_digits --epochs 200
 uv run python -m acoustic_engine.recognize artifacts/tiny_digit_ctc.pt data/spoken_digits_parts/7_jackson_0.wav
 uv run python -m acoustic_engine.recognize artifacts/tiny_digit_ctc.pt data/spoken_digits_parts/7_jackson_0.wav --decoder prefix_beam --beam-size 10

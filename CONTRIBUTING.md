@@ -23,7 +23,7 @@ uv run python scripts/enrich_course.py
 uv run python scripts/validate_course.py
 ```
 
-若代码发生变化，应重新执行受影响 Notebook，并更新对应 `_已运行.ipynb`。
+若代码发生变化，应重新执行受影响 Notebook，并更新 `notebooks/_executed/` 中对应的运行对照。输出路径由 `scripts/notebook_layout.py` 统一管理。
 
 ## Commit 建议
 

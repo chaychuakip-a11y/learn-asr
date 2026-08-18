@@ -63,6 +63,9 @@ import numpy as np
 import torch
 from IPython.display import Markdown, clear_output, display
 
+# 小矩阵 CTCLoss 使用单线程，避免 Windows/OpenMP 为极小工作量启动大量线程。
+torch.set_num_threads(1)
+
 BLANK = "∅"
 SYMBOLS = [BLANK, "A", "B"]
 SYMBOL_TO_ID = {s: i for i, s in enumerate(SYMBOLS)}
@@ -488,32 +491,23 @@ for prefix, scores in sorted(full_beam.items(), key=lambda item: sum(item[1]), r
     ),
     code(
         """
-beam_size_widget = widgets.SelectionSlider(options=[1, 2, 3, 5, 10, 100], value=5, description="beam size")
-beam_time_widget = widgets.IntSlider(min=1, max=len(P), value=1, description="已处理帧")
-beam_output = widgets.Output()
-
-def show_beam(*_):
-    beam_size = beam_size_widget.value
-    used = beam_time_widget.value
+@widgets.interact(
+    beam_size=widgets.SelectionSlider(options=[1, 2, 3, 5, 10, 100], value=5, description="beam size"),
+    used=widgets.IntSlider(min=1, max=len(P), value=1, description="已处理帧"),
+)
+def show_beam(beam_size=5, used=1):
     beam, history = prefix_beam_search(P[:used], beam_size=beam_size)
     items = sorted(beam.items(), key=lambda item: sum(item[1]), reverse=True)
     names = [prefix or "<空>" for prefix, _ in items]
     totals = [sum(scores) for _, scores in items]
-    with beam_output:
-        clear_output(wait=True)
-        fig, ax = plt.subplots(figsize=(8, max(3, 0.45 * len(items))))
-        ax.barh(names[::-1], totals[::-1])
-        ax.set(xlabel="prefix probability", ylabel="前缀", title=f"处理 {used} 帧后的 beam（size={beam_size}）")
-        plt.show()
-        best_prefix, best_scores = items[0]
-        print("当前最佳文本：", repr(best_prefix), "累计概率：", sum(best_scores))
-        if beam_size == 1:
-            print("beam=1 不等价于始终正确的文本搜索；早期剪枝后，后续无法恢复被删前缀。")
-
-for control in [beam_size_widget, beam_time_widget]:
-    control.observe(show_beam, names="value")
-display(widgets.HBox([beam_size_widget, beam_time_widget]), beam_output)
-show_beam()
+    fig, ax = plt.subplots(figsize=(8, max(3, 0.45 * len(items))))
+    ax.barh(names[::-1], totals[::-1])
+    ax.set(xlabel="prefix probability", ylabel="前缀", title=f"处理 {used} 帧后的 beam（size={beam_size}）")
+    plt.show()
+    best_prefix, best_scores = items[0]
+    print("当前最佳文本：", repr(best_prefix), "累计概率：", sum(best_scores))
+    if beam_size == 1:
+        print("beam=1 不等价于始终正确的文本搜索；早期剪枝后，后续无法恢复被删前缀。")
 """
     ),
     md(
