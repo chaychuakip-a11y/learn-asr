@@ -24,6 +24,7 @@ EXECUTED_CATEGORIES = {
     "asr_core": "ASR 主线 01～46",
     "pytorch_foundations": "Python/PyTorch 桥梁课",
     "audio_foundations": "音频零基础桥梁课",
+    "research_thinking": "研究与工程思维课",
     "language_models": "语言模型专修课",
     "labs": "学习中枢与专题实验室",
     "capstone": "结课项目",
@@ -42,6 +43,8 @@ def executed_category(source: Path | str) -> str:
         return "asr_core"
     if stem.startswith("音频基础_"):
         return "audio_foundations"
+    if stem.startswith("思维训练_"):
+        return "research_thinking"
     if stem.startswith(("基础_", "代码伴读_")):
         return "pytorch_foundations"
     if stem.startswith("语言模型零基础_"):

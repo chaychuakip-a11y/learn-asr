@@ -72,6 +72,14 @@ class LearningPathTests(unittest.TestCase):
         ):
             self.assertIn(concept, self.text)
 
+    def test_research_thinking_track_is_routed_as_transferable_practice(self) -> None:
+        self.assertIn("研究与工程思维 6 课", self.text)
+        self.assertIn("可证伪假设", self.text)
+        self.assertIn("错误切片", self.text)
+        self.assertIn("Bootstrap", self.text)
+        self.assertIn("Pareto", self.text)
+        self.assertIn("贯穿", self.text)
+
 
 if __name__ == "__main__":
     unittest.main()
