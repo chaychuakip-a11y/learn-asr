@@ -17,6 +17,8 @@ uv run jupyter lab
 
 如果你想提高“发现问题、验证判断、解释证据和做技术选择”的能力，进入新增的 [研究与工程思维 6 课](notebooks/研究与工程思维课程索引.md)。它依次训练可证伪假设、错误切片、对照/消融、Bootstrap 不确定性、因果排错和 Pareto 风险决策；[学习拓展调研](LEARNING_EXPANSION_RESEARCH.md)还列出了语音学、数据中心 ASR、多语口音、人机交互、隐私安全、端侧系统和事故响应等后续方向。
 
+如果你还想把视野拓展到 ASR 之外，从 [认知工具箱总手册](COGNITIVE_TOOLKIT.md)和 [认知拓展 8 课](notebooks/认知拓展课程索引.md)开始。课程覆盖论证与反例、基础率与贝叶斯、因果图、动态系统、决策与信息价值、信息论、概率预测校准和学习科学；每课都包含误用边界与 ASR/工作/生活迁移练习。
+
 如果你的目标是从零学习 N-gram、OpenFst 与 ASR 语言模型，直接从 [9 课独立课程索引](notebooks/语言模型零基础_课程索引.md) 开始；这条路线不要求先学完声学模型课程，并带有可修改实验、交互控件、真实 OpenFst/KenLM 命令、失败对照和自动判题。运行第 3 课前按 [安装与排错指南](ASR_LM_ENVIRONMENT.md) 配好 WSL 工具链，实验时可查 [OpenFst/KenLM 速查表](ASR_LM_OPENFST_KENLM_CHEATSHEET.md)。
 
 完成基础与综合项目后，打开 [09：前沿 ASR 语言模型系统设计实验室](notebooks/语言模型零基础_09_前沿ASR语言模型系统设计实验室.ipynb)，并配合 [ASR 语言模型前沿论文与系统路线](FRONTIER_ASR_LM_READING.md)，进入截至 2026-08-18 的 SpeechLLM、音频条件纠错、检索式 contextual ASR 和幻觉检测研究。
@@ -36,6 +38,7 @@ uv run jupyter lab
 | 专业音频软件实验 | 1 套跨软件实验 | Audacity 波形/频谱、Praat F0/Formant/TextGrid、Sonic Visualiser、Audition/Cool Edit 对照 |
 | 音频问题盲诊断 | 24 条盲题＋2 条正常对照 | 幅值、削波、DC、噪声、滤波、丢失、回声、采样率、多通道与混叠诊断 |
 | 研究与工程思维 | 思维训练 1～6 | 可证伪假设、错误切片、实验设计、Bootstrap、因果排错、Pareto 风险决策 |
+| 认知拓展工具箱 | 认知拓展 1～8 | 论证、贝叶斯、因果图、系统、决策、信息论、预测校准、学习科学 |
 | 声音与特征 | 1～6 | 采样、dB、FFT、STFT、Mel、Log-Mel |
 | 张量与编码器 | 7～9 | Padding、Mask、PyTorch、Conv1d、下采样 |
 | CTC | 10～14 | blank、动态规划、CTCLoss、Prefix Beam、真实音频训练 |

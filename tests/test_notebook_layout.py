@@ -14,6 +14,7 @@ ACTIVE_INDEXES = (
     NOTEBOOK_DIR / "PyTorch零基础课程索引.md",
     NOTEBOOK_DIR / "音频零基础课程索引.md",
     NOTEBOOK_DIR / "研究与工程思维课程索引.md",
+    NOTEBOOK_DIR / "认知拓展课程索引.md",
     NOTEBOOK_DIR / "语言模型零基础_课程索引.md",
     EXECUTED_DIR / "README.md",
 )
@@ -25,6 +26,7 @@ def paired_sources() -> list[Path]:
         "基础_[0-9][0-9]_*.ipynb",
         "音频基础_[0-9][0-9]_*.ipynb",
         "思维训练_[0-9][0-9]_*.ipynb",
+        "认知拓展_[0-9][0-9]_*.ipynb",
         "语言模型零基础_[0-9][0-9]_*.ipynb",
         "专题_*.ipynb",
         "学习中枢_*.ipynb",
@@ -52,7 +54,7 @@ class NotebookLayoutTests(unittest.TestCase):
         sources = paired_sources()
         expected = {executed_path(source).resolve() for source in sources}
         actual = {path.resolve() for path in EXECUTED_DIR.rglob("*_已运行.ipynb")}
-        self.assertEqual(len(sources), 85)
+        self.assertEqual(len(sources), 93)
         self.assertSetEqual(actual, expected)
 
     def test_active_indexes_have_stable_names(self) -> None:
