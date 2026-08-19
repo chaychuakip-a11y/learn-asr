@@ -24,7 +24,12 @@ jobs:
         run: uv python install 3.13
 
       - name: Validate course structure
-        run: uv run --no-project --with nbformat python scripts/validate_course.py --source-only
+        run: >-
+          uv run --no-project
+          --with nbformat
+          --with numpy
+          --with soundfile
+          python scripts/validate_course.py --source-only
 
       - name: Compile Python sources
         run: python -m compileall -q deployment scripts
