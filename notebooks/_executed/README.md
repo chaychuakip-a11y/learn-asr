@@ -18,6 +18,7 @@
 | [`audio_foundations/`](audio_foundations/) | 音频零基础 01～06 的完整运行对照 |
 | [`research_thinking/`](research_thinking/) | 研究与工程思维 01～06 的完整运行对照 |
 | [`cognitive_toolkit/`](cognitive_toolkit/) | 认知拓展工具箱 01～08 的完整运行对照 |
+| [`information_reasoning/`](information_reasoning/) | 逻辑与信息研究进阶 01～08 的完整运行对照 |
 | [`language_models/`](language_models/) | 语言模型专修第 01～09 课 |
 | [`labs/`](labs/) | 学习中枢与专题实验室 |
 | [`capstone/`](capstone/) | 实时数字 CTC 结课项目 |

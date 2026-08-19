@@ -52,6 +52,16 @@ COGNITIVE_TOOLKIT_STEMS=[
     "认知拓展_07_认知偏差预测校准与复盘",
     "认知拓展_08_提取间隔反馈与迁移",
 ]
+INFORMATION_REASONING_STEMS=[
+    "研究进阶_01_问题定义问题树与费米估算",
+    "研究进阶_02_必要充分量词作用域与反例",
+    "研究进阶_03_演绎归纳溯因与竞争解释",
+    "研究进阶_04_论证图钢人化与反方测试",
+    "研究进阶_05_分面检索布尔查询与停止规则",
+    "研究进阶_06_横向阅读来源溯源与独立性",
+    "研究进阶_07_证据矩阵冲突消解与综合",
+    "研究进阶_08_系统综述开放科学与研究档案",
+]
 CAPSTONE_STEM="结课项目_实时数字CTC声学引擎_从WAV到流式文本"
 BEGINNER_CODE_STEM="代码伴读_零基础逐行理解ASR"
 SPECIAL_NOTEBOOKS=[
@@ -68,7 +78,7 @@ SPECIAL_NOTEBOOKS=[
 ]
 REQUIRED=[
     "README.md","LEARNING_PATH.md","pyproject.toml","uv.lock","DATA_SOURCES.md","COURSE_AUDIT.md","LEARNING_LOG.md",
-    "AUDIO_SOFTWARE_GUIDE.md","AUDIO_DIAGNOSIS_PRACTICE.md","LEARNING_EXPANSION_RESEARCH.md","COGNITIVE_TOOLKIT.md",
+    "AUDIO_SOFTWARE_GUIDE.md","AUDIO_DIAGNOSIS_PRACTICE.md","LEARNING_EXPANSION_RESEARCH.md","COGNITIVE_TOOLKIT.md","LOGIC_INFORMATION_RESEARCH.md",
     "data/audio_software_lab/manifest.json",
     "data/audio_diagnosis_lab/manifest.json","data/audio_diagnosis_lab/answer_key.json",
     "data/audio_diagnosis_lab/reference_clean_speech.wav",
@@ -85,13 +95,13 @@ REQUIRED=[
     "AUDIOMNIST_EXTERNAL_REPORT.md","LICENSE","LICENSE-CONTENT","LICENSE-SCOPE.md","NOTICE",
     "notebooks/README.md","notebooks/核心课程索引_第01到41课.md",
     "notebooks/PyTorch零基础课程索引.md","notebooks/音频零基础课程索引.md",
-    "notebooks/语言模型零基础_课程索引.md","notebooks/研究与工程思维课程索引.md","notebooks/认知拓展课程索引.md",
+    "notebooks/语言模型零基础_课程索引.md","notebooks/研究与工程思维课程索引.md","notebooks/认知拓展课程索引.md","notebooks/逻辑与信息研究进阶课程索引.md",
     "notebooks/零基础预备课_Python与PyTorch.ipynb","scripts/notebook_layout.py",
     "scripts/build_beginner_code_companion.py",
     "scripts/build_pytorch_foundation_course.py","scripts/build_frontier_course.py",
     "scripts/build_audio_foundation_course.py","scripts/build_audio_software_lab_assets.py",
     "scripts/build_audio_diagnosis_practice.py","scripts/audio_diagnosis_quiz.py",
-    "scripts/enrich_course_bridges.py","scripts/build_research_thinking_course.py","scripts/build_cognitive_toolkit_course.py",
+    "scripts/enrich_course_bridges.py","scripts/build_research_thinking_course.py","scripts/build_cognitive_toolkit_course.py","scripts/build_information_reasoning_course.py",
     "scripts/build_learning_hub.py","scripts/build_ctc_lab.py","scripts/build_streaming_lab.py",
     "scripts/build_wfst_lab.py","scripts/build_quant_deploy_lab.py","scripts/build_frontend_lab.py",
     "scripts/build_semantic_lab.py","scripts/build_capstone_lab.py","scripts/build_fsdd_generalization_lab.py",
@@ -110,7 +120,8 @@ REQUIRED=[
     "artifacts/fsdd_speaker_disjoint_results.json","artifacts/fsdd_loso_results.json",
     "artifacts/audiomnist_external_results.json","tests/test_acoustic_engine.py",
     "tests/test_fsdd_generalization.py","tests/test_external_evaluation_protocol.py",
-    "tests/test_research_thinking_course.py","tests/test_cognitive_toolkit_course.py",
+    "tests/test_research_thinking_course.py","tests/test_cognitive_toolkit_course.py","tests/test_information_reasoning_course.py","tests/test_research_workspace.py",
+    "research_workspace/README.md","research_workspace/__init__.py","research_workspace/workbench.py","research_workspace/example_dossier.json",
 ]
 
 
@@ -214,6 +225,23 @@ def validate_cognitive_toolkit(path:Path,expected_lesson:int,executed:bool):
         errors.append(f"{path.name}: missing cognitive evidence model")
     text="\n".join(cell.source for cell in nb.cells)
     for marker in ["课前预测","一手资料与课程取舍","误用警报","适用边界","迁移练习","闭卷挑战","最小掌握门禁"]:
+        if marker not in text:errors.append(f"{path.name}: missing {marker}")
+    code_cells=[cell for cell in nb.cells if cell.cell_type=="code"]
+    if len(code_cells)<3:errors.append(f"{path.name}: expected at least 3 code cells")
+    return errors
+
+
+def validate_information_reasoning(path:Path,expected_lesson:int,executed:bool):
+    errors=validate_source_or_executed(path,executed)
+    if errors:return errors
+    nb=nbformat.read(path,as_version=4)
+    metadata=nb.metadata.get("course",{})
+    if metadata.get("track")!="information_reasoning" or metadata.get("lesson")!=expected_lesson:
+        errors.append(f"{path.name}: information-reasoning metadata mismatch")
+    if metadata.get("evidence_model")!="question-query-provenance-matrix-synthesis-update":
+        errors.append(f"{path.name}: missing information-reasoning evidence model")
+    text="\n".join(cell.source for cell in nb.cells)
+    for marker in ["课前预测","一手资料与课程取舍","信息搜集实作","误用警报","适用边界","迁移练习","闭卷挑战","最小掌握门禁","来源家族","停止规则"]:
         if marker not in text:errors.append(f"{path.name}: missing {marker}")
     code_cells=[cell for cell in nb.cells if cell.cell_type=="code"]
     if len(code_cells)<3:errors.append(f"{path.name}: expected at least 3 code cells")
@@ -469,6 +497,16 @@ def main():
             else:
                 errors.extend(validate_cognitive_toolkit(executed_cognitive,lesson,True))
                 if source.exists():errors.extend(validate_pair(source,executed_cognitive))
+    for lesson,stem in enumerate(INFORMATION_REASONING_STEMS,start=1):
+        source=NB_DIR/f"{stem}.ipynb"
+        if not source.exists():errors.append(f"missing information-reasoning source: {source.name}")
+        else:errors.extend(validate_information_reasoning(source,lesson,False))
+        if not args.source_only:
+            executed_research=executed_path(source)
+            if not executed_research.exists():errors.append(f"missing executed information-reasoning lesson: {executed_research.name}")
+            else:
+                errors.extend(validate_information_reasoning(executed_research,lesson,True))
+                if source.exists():errors.extend(validate_pair(source,executed_research))
     language_model_sources=sorted(p for p in NB_DIR.glob("语言模型零基础_[0-9][0-9]_*.ipynb") if not p.stem.endswith("_已运行"))
     language_model_numbers=[language_model_number(path) for path in language_model_sources]
     last_language_model=max(language_model_numbers,default=0)
@@ -534,8 +572,8 @@ def main():
         print("COURSE VALIDATION FAILED")
         for error in errors:print("-",error)
         return 1
-    executed_count=1+len(FOUNDATION_STEMS)+len(AUDIO_FOUNDATION_STEMS)+len(RESEARCH_THINKING_STEMS)+len(COGNITIVE_TOOLKIT_STEMS)+len(language_model_sources)+len(expected)+len(SPECIAL_NOTEBOOKS)+1
-    print(f"COURSE VALIDATION PASSED: 1 beginner code companion, {len(FOUNDATION_STEMS)} PyTorch foundation, {len(AUDIO_FOUNDATION_STEMS)} audio foundation, {len(RESEARCH_THINKING_STEMS)} research thinking, {len(COGNITIVE_TOOLKIT_STEMS)} cognitive toolkit, {len(language_model_sources)} LM foundation, {len(sources)} ASR lessons, {len(SPECIAL_NOTEBOOKS)} special labs, 1 capstone"+("" if args.source_only else f", {executed_count} executed copies"))
+    executed_count=1+len(FOUNDATION_STEMS)+len(AUDIO_FOUNDATION_STEMS)+len(RESEARCH_THINKING_STEMS)+len(COGNITIVE_TOOLKIT_STEMS)+len(INFORMATION_REASONING_STEMS)+len(language_model_sources)+len(expected)+len(SPECIAL_NOTEBOOKS)+1
+    print(f"COURSE VALIDATION PASSED: 1 beginner code companion, {len(FOUNDATION_STEMS)} PyTorch foundation, {len(AUDIO_FOUNDATION_STEMS)} audio foundation, {len(RESEARCH_THINKING_STEMS)} research thinking, {len(COGNITIVE_TOOLKIT_STEMS)} cognitive toolkit, {len(INFORMATION_REASONING_STEMS)} information reasoning, {len(language_model_sources)} LM foundation, {len(sources)} ASR lessons, {len(SPECIAL_NOTEBOOKS)} special labs, 1 capstone"+("" if args.source_only else f", {executed_count} executed copies"))
     return 0
 
 

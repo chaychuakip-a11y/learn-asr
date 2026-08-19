@@ -26,6 +26,7 @@ EXECUTED_CATEGORIES = {
     "audio_foundations": "音频零基础桥梁课",
     "research_thinking": "研究与工程思维课",
     "cognitive_toolkit": "认知拓展工具箱",
+    "information_reasoning": "逻辑与信息研究进阶",
     "language_models": "语言模型专修课",
     "labs": "学习中枢与专题实验室",
     "capstone": "结课项目",
@@ -48,6 +49,8 @@ def executed_category(source: Path | str) -> str:
         return "research_thinking"
     if stem.startswith("认知拓展_"):
         return "cognitive_toolkit"
+    if stem.startswith("研究进阶_"):
+        return "information_reasoning"
     if stem.startswith(("基础_", "代码伴读_")):
         return "pytorch_foundations"
     if stem.startswith("语言模型零基础_"):

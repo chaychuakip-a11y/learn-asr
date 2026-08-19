@@ -1,0 +1,104 @@
+{
+  "question": "怎样培养可复查、可更新的信息搜集能力？",
+  "decision": "设计一套兼顾检索、核验、证据综合和更新的进阶课程",
+  "scope": {
+    "population": "成年自主学习者",
+    "concepts": ["information literacy", "lateral reading", "research synthesis"],
+    "time_window": "不限；优先现行标准和原始方法资料"
+  },
+  "inclusion_criteria": [
+    "标准组织、研究机构或方法手册的一手资料",
+    "能够说明可操作流程或边界"
+  ],
+  "exclusion_criteria": [
+    "只有搜索摘要而无法访问原文",
+    "未标明来源的二手技巧清单"
+  ],
+  "query_log": [
+    {
+      "date": "2026-08-18",
+      "platform": "ACRL",
+      "query": "Framework for Information Literacy strategic exploration",
+      "result": "纳入官方框架"
+    },
+    {
+      "date": "2026-08-18",
+      "platform": "Cochrane Handbook",
+      "query": "searching selecting studies multiple reports",
+      "result": "纳入检索和来源家族原则"
+    },
+    {
+      "date": "2026-08-18",
+      "platform": "PRISMA",
+      "query": "PRISMA 2020 statement search selection reporting",
+      "result": "纳入透明报告框架"
+    }
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Framework for Information Literacy for Higher Education",
+      "url": "https://www.ala.org/acrl/standards/ilframework",
+      "source_type": "official_framework",
+      "source_family": "ACRL-framework",
+      "direct_evidence": true,
+      "year": 2016
+    },
+    {
+      "id": "S2",
+      "title": "Cochrane Handbook Chapter 4: Searching for and selecting studies",
+      "url": "https://training.cochrane.org/handbook/current/chapter-04",
+      "source_type": "method_handbook",
+      "source_family": "Cochrane-handbook",
+      "direct_evidence": true,
+      "year": 2024
+    },
+    {
+      "id": "S3",
+      "title": "The PRISMA 2020 statement",
+      "doi": "10.1136/bmj.n71",
+      "url": "https://www.bmj.com/content/372/bmj.n71",
+      "source_type": "reporting_guideline",
+      "source_family": "PRISMA-2020",
+      "direct_evidence": true,
+      "year": 2021
+    }
+  ],
+  "claims": [
+    {
+      "id": "C1",
+      "text": "高质量检索是根据问题不断迭代的战略探索。",
+      "source_ids": ["S1"],
+      "confidence": "高"
+    },
+    {
+      "id": "C2",
+      "text": "同一研究的多份报告不应当被当作独立证据。",
+      "source_ids": ["S2"],
+      "confidence": "高"
+    },
+    {
+      "id": "C3",
+      "text": "检索和筛选过程需要透明记录以便复查。",
+      "source_ids": ["S2", "S3"],
+      "confidence": "高"
+    }
+  ],
+  "conflicts": [
+    "正式系统综述追求高召回率；日常决策必须声明资源上限和停止规则。"
+  ],
+  "stop_rule": "连续三轮不同检索路径没有新增合格来源，并完成一次反方检索后停止。",
+  "limitations": [
+    "示例没有实际覆盖所有数据库",
+    "停止规则是资源受限情境的启发式，不是完整性保证"
+  ],
+  "prisma_flow": {
+    "identified": 18,
+    "duplicates_removed": 3,
+    "screened": 15,
+    "excluded_screening": 8,
+    "full_text_assessed": 7,
+    "excluded_full_text": 4,
+    "included": 3
+  }
+}
